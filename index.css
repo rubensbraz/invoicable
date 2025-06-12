@@ -1,0 +1,64 @@
+html {
+    font-size: 14px;
+}
+
+#pdf_element {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.editable-field {
+    border: none;
+    border-bottom: 1px dashed #ccc;
+    padding: 2px 4px;
+    min-height: 20px;
+    min-width: 100px;
+    display: inline-block;
+    outline: none;
+    background: transparent;
+}
+
+.editable-field:focus {
+    border-bottom: 1px solid #007bff;
+    background: #f8f9fa;
+}
+
+.editable-field:empty:before {
+    content: attr(placeholder);
+    color: #999;
+    font-style: italic;
+}
+
+.invoice-item input {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 0;
+    background: transparent;
+    text-align: center;
+}
+
+.invoice-item input:focus {
+    border-bottom: 2px solid #007bff;
+    box-shadow: none;
+}
+
+.item-description {
+    text-align: left !important;
+}
+
+.item-amount {
+    text-align: center;
+    font-weight: bold;
+}

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoicable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+
+    <link href="./index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <style>
+        .form-control {
+            border: none;
+            border-bottom: 1px solid #ced4da;
+            border-radius: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container unselectable">
+        <nav class="navbar bg-light">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1"><i class="bi bi-file-earmark-text"></i>
+                    Invoicable
+                </span>
+                <span class="small" id="version"></span>
+            </div>
+        </nav>
+        <div class="row pt-4">
+            <div class="col-md-12 p-3">
+                <div class="card">
+                    <div id="pdf_element" class="ps-4 pe-4">
+                        <div class="card-body">
+                            <h1 class="mt-5 mb-5 bg-secondary text-white" id="title">INVOICE</h1>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p><strong>Date:</strong> <span id="date"></span></p>
+                                    <p><strong>Invoice Number:</strong> <span id="invoice_number"></span></p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <h5>Bill To:</h5>
+                                    <div contenteditable="true" class="editable-field" id="bill_to_name"
+                                        placeholder="Company/Person Name">
+                                    </div>
+                                    <div contenteditable="true" class="editable-field" id="bill_to_address"
+                                        placeholder="Address">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>From:</h5>
+                                    <div contenteditable="true" class="editable-field" id="bill_from_name"
+                                        placeholder="Your Company/Name">
+                                    </div>
+                                    <div contenteditable="true" class="editable-field" id="bill_from_address"
+                                        placeholder="Your Address">
+                                    </div>
+                                    <div>Tel: <span contenteditable="true" class="editable-field" id="bill_from_phone"
+                                            placeholder="Phone"></span></div>
+                                    <div>Email: <span contenteditable="true" class="editable-field" id="bill_from_email"
+                                            placeholder="Email"></span></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>Items</h5>
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="40%">Description</th>
+                                            <th width="15%">Qty</th>
+                                            <th width="20%">Unit Price</th>
+                                            <th width="20%">Amount</th>
+                                            <th width="5%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoice_items">
+                                        <tr class="invoice-item">
+                                            <td><input type="text" class="form-control item-description"
+                                                    placeholder="Service/Product description"
+                                                    oninput="calculateRowTotal(this)"></td>
+                                            <td><input type="number" class="form-control item-quantity" value="1"
+                                                    min="0" oninput="calculateRowTotal(this)"></td>
+                                            <td><input type="number" class="form-control item-price" placeholder="0"
+                                                    step="1" min="0" oninput="calculateRowTotal(this)"></td>
+                                            <td class="item-amount">¥0</td>
+                                            <td><button type="button" class="btn btn-sm btn-danger"
+                                                    onclick="removeItem(this)">×</button></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                            <td><strong id="invoice_total">¥0</strong></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <button type="button" class="btn btn-secondary" onclick="addItem()">
+                                    <i class="bi bi-plus"></i> Add Item
+                                </button>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>Payment Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>Bank: <span contenteditable="true" class="editable-field" id="bank_name"
+                                                placeholder="Bank Name"></span></p>
+                                        <p>Branch: <span contenteditable="true" class="editable-field" id="branch_name"
+                                                placeholder="Branch Name"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Account Type: <span contenteditable="true" class="editable-field"
+                                                id="account_type" placeholder="Checking/Savings"></span></p>
+                                        <p>Account Number: <span contenteditable="true" class="editable-field"
+                                                id="account_number" placeholder="Account Number"></span></p>
+                                        <p>Account Holder: <span contenteditable="true" class="editable-field"
+                                                id="account_holder" placeholder="Account Holder Name"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-danger p-2" onclick="downloadPDF();">Download PDF</button>
+            </div>
+            <hr>
+            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                <input type="text" class="form-control" id="share_link">
+                <button class="btn btn-secondary p-2" onclick="showShareLink();">Create Share Link</button>
+            </div>
+        </div>
+
+
+        <hr>
+        <footer class="text-center">
+            <p class="small">
+                The data entered will not be sent outside the system. Please refer to the source code for details.
+                The author assumes no responsibility for any damage or loss caused by this system.
+            </p>
+            2025 &copy; Tetsuaki Baba <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i
+                    class="bi bi-github"></i></a>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

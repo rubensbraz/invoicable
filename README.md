@@ -16,3 +16,7 @@ Ultra simple invoice creation system for small businesses and freelancers.
 4. Download as PDF or create a share link
 
 The system works entirely in the browser - no data is sent to external servers.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
