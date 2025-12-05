@@ -1,168 +1,204 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoicable</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Invoicable - Simple Invoice</title>
+        <!-- Favicon -->
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22 fill=%22%234dabf7%22><path d=%22M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 2h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 2h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z%22/></svg>">
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <!-- CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <link href="./index.css" rel="stylesheet">
+    </head>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
-
-    <link href="./index.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <style>
-        .form-control {
-            border: none;
-            border-bottom: 1px solid #ced4da;
-            border-radius: 0;
-        }
-    </style>
-
-</head>
-
-<body>
-    <div class="container unselectable">
-        <nav class="navbar bg-light">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1"><i class="bi bi-file-earmark-text"></i>
-                    Invoicable
-                </span>
-                <span class="small" id="version"></span>
-            </div>
-        </nav>
-        <div class="row pt-4">
-            <div class="col-md-12 p-3">
-                <div class="card">
-                    <div id="pdf_element" class="ps-4 pe-4">
-                        <div class="card-body">
-                            <h1 class="mt-5 mb-5 bg-secondary text-white" id="title">INVOICE</h1>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <p><strong>Date:</strong> <span id="date"></span></p>
-                                    <p><strong>Invoice Number:</strong> <span id="invoice_number"></span></p>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-8">
-                                    <h5>Bill To:</h5>
-                                    <div contenteditable="true" class="editable-field" id="bill_to_name"
-                                        placeholder="Company/Person Name">
-                                    </div>
-                                    <div contenteditable="true" class="editable-field" id="bill_to_address"
-                                        placeholder="Address">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <h5>From:</h5>
-                                    <div contenteditable="true" class="editable-field" id="bill_from_name"
-                                        placeholder="Your Company/Name">
-                                    </div>
-                                    <div contenteditable="true" class="editable-field" id="bill_from_address"
-                                        placeholder="Your Address">
-                                    </div>
-                                    <div>Tel: <span contenteditable="true" class="editable-field" id="bill_from_phone"
-                                            placeholder="Phone"></span></div>
-                                    <div>Email: <span contenteditable="true" class="editable-field" id="bill_from_email"
-                                            placeholder="Email"></span></div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5>Items</h5>
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th width="40%">Description</th>
-                                            <th width="15%">Qty</th>
-                                            <th width="20%">Unit Price</th>
-                                            <th width="20%">Amount</th>
-                                            <th width="5%">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="invoice_items">
-                                        <tr class="invoice-item">
-                                            <td><input type="text" class="form-control item-description"
-                                                    placeholder="Service/Product description"
-                                                    oninput="calculateRowTotal(this)"></td>
-                                            <td><input type="number" class="form-control item-quantity" value="1"
-                                                    min="0" oninput="calculateRowTotal(this)"></td>
-                                            <td><input type="number" class="form-control item-price" placeholder="0"
-                                                    step="1" min="0" oninput="calculateRowTotal(this)"></td>
-                                            <td class="item-amount">¥0</td>
-                                            <td><button type="button" class="btn btn-sm btn-danger"
-                                                    onclick="removeItem(this)">×</button></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                                            <td><strong id="invoice_total">¥0</strong></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <button type="button" class="btn btn-secondary" onclick="addItem()">
-                                    <i class="bi bi-plus"></i> Add Item
-                                </button>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5>Payment Information</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p>Bank: <span contenteditable="true" class="editable-field" id="bank_name"
-                                                placeholder="Bank Name"></span></p>
-                                        <p>Branch: <span contenteditable="true" class="editable-field" id="branch_name"
-                                                placeholder="Branch Name"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>Account Type: <span contenteditable="true" class="editable-field"
-                                                id="account_type" placeholder="Checking/Savings"></span></p>
-                                        <p>Account Number: <span contenteditable="true" class="editable-field"
-                                                id="account_number" placeholder="Account Number"></span></p>
-                                        <p>Account Holder: <span contenteditable="true" class="editable-field"
-                                                id="account_holder" placeholder="Account Holder Name"></span></p>
-                                    </div>
-                                </div>
-                            </div>
-
+    <body>
+        <div class="container unselectable">
+            <!-- General Configuration -->
+            <nav class="navbar fixed-top bg-white border-bottom py-2 shadow-sm">
+                <div class="container">
+                    <span class="navbar-brand mb-0 h1 fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-file-earmark-text-fill text-primary-custom fs-4"></i>
+                        <span style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px; font-size: 1.2rem;">Invoicable</span>
+                    </span>
+                    <div class="d-flex gap-2 align-items-center toolbar-actions flex-wrap justify-content-end">
+                        <div class="toolbar-item" title="Date Format">
+                            <i class="bi bi-calendar-event text-muted"></i>
+                            <select id="dateFormatSelect" class="toolbar-select form-select form-select-sm">
+                                <option value="us">MM/DD/YYYY (US)</option>
+                                <option value="jp">YYYY-MM-DD (JP)</option>
+                                <option value="br">DD/MM/YYYY (BR)</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-item" title="Currency">
+                            <i class="bi bi-cash-coin text-muted"></i>
+                            <select id="currencySelect" class="toolbar-select form-select form-select-sm">
+                            </select>
+                        </div>
+                        <div class="toolbar-item" title="Language">
+                            <i class="bi bi-translate text-muted"></i>
+                            <select id="languageSelect" class="toolbar-select form-select form-select-sm">
+                                <option value="en">English</option>
+                                <option value="jp">日本語</option>
+                                <option value="pt">Português</option>
+                            </select>
+                        </div>
+                        <div class="color-picker-wrapper" title="Theme Color">
+                            <input type="color" class="form-control form-control-color" id="colorPicker" value="#2c3e50">
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-danger p-2" onclick="downloadPDF();">Download PDF</button>
-            </div>
-            <hr>
-            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                <input type="text" class="form-control" id="share_link">
-                <button class="btn btn-secondary p-2" onclick="showShareLink();">Create Share Link</button>
+            </nav>
+            <div class="navbar-spacer"></div>
+            <div class="row justify-content-center">
+                <!-- Invoice -->
+                <div class="col-lg-9 p-0">
+                    <div class="card shadow-lg border-0 rounded-3 overflow-hidden mb-5">
+                        <div id="pdf_element" class="bg-white p-4">
+                            <div class="card-body p-0">
+                                <div class="d-flex justify-content-between align-items-end mb-3">
+                                    <div>
+                                        <h2 class="fw-bold text-uppercase m-0 header-title" id="title" data-i18n="invoice_title">INVOICE</h2>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="d-flex align-items-center justify-content-end gap-2">
+                                            <span class="text-muted small fw-bold text-uppercase" data-i18n="invoice_number_label">Invoice #</span>
+                                            <span contenteditable="true" class="fs-5 fw-bold editable-field text-end" id="invoice_number" title="Edit Number"></span>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-end gap-2 mt-1">
+                                            <span class="text-muted small fw-bold text-uppercase" data-i18n="date_label">Date:</span>
+                                            <input type="date" id="date" class="form-control date-picker-input" title="Click to change date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="header-banner mb-4" style="height: 4px; width: 100%; border-radius: 2px;"></div>
+                                <div class="row mb-4 gx-5">
+                                    <div class="col-6">
+                                        <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="from_title">From</h6>
+                                        <div contenteditable="true" class="editable-field fw-bold fs-6 mb-1 text-nowrap-custom" id="bill_from_name" data-placeholder="Your Name / Company">
+                                        </div>
+                                        <div contenteditable="true" class="editable-field d-block mb-1 fs-6" id="bill_from_address" data-placeholder="Your Address">
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 text-muted x-small mt-2">
+                                            <i class="bi bi-telephone"></i>
+                                            <span contenteditable="true" class="editable-field" id="bill_from_phone" data-placeholder="Phone"></span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 text-muted x-small">
+                                            <i class="bi bi-envelope"></i>
+                                            <span contenteditable="true" class="editable-field" id="bill_from_email" data-placeholder="Email"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="bill_to_title">Bill To</h6>
+                                        <div contenteditable="true" class="editable-field fw-bold fs-6 mb-1 text-end text-nowrap-custom" id="bill_to_name" data-placeholder="Client Name">
+                                        </div>
+                                        <div contenteditable="true" class="editable-field d-block text-end fs-6" id="bill_to_address" data-placeholder="Client Address">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 mb-3">
+                                    <table class="table table-sm table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="45%" class="border-0 ps-2 py-2 x-small text-uppercase text-muted" data-i18n="col_description">Description</th>
+                                                <th width="15%" class="border-0 text-center py-2 x-small text-uppercase text-muted" data-i18n="col_qty">Qty</th>
+                                                <th width="20%" class="border-0 text-center py-2 x-small text-uppercase text-muted" data-i18n="col_price">Price</th>
+                                                <th width="15%" class="border-0 text-center py-2 x-small text-uppercase text-muted" data-i18n="col_amount">Amount</th>
+                                                <th width="5%" class="action-column border-0 text-center py-2"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="invoice_items" class="border-top-0">
+                                        </tbody>
+                                        <tfoot class="border-top">
+                                            <tr>
+                                                <td colspan="5" class="pt-2 border-0">
+                                                    <button type="button" class="btn btn-light btn-sm text-muted no-print x-small" onclick="invoiceApp.addItem()">
+                                                        <i class="bi bi-plus-circle me-1"></i> <span data-i18n="btn_add_item">Add Item</span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" class="border-0"></td>
+                                                <td class="text-end fw-bold fs-6 pt-2 border-0" data-i18n="total_label">Total:</td>
+                                                <td class="text-end fw-bold fs-6 pt-2 border-0 text-primary-custom" id="invoice_total">0.00</td>
+                                                <td class="border-0"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="row g-4 mt-1">
+                                    <div class="col-7">
+                                        <div class="p-3 rounded-2 bg-light bg-opacity-50 border border-light h-100 break-inside-avoid">
+                                            <h6 class="text-uppercase text-muted fw-bold x-small mb-3" data-i18n="payment_info_title">Payment Details</h6>
+                                            <div class="row g-2">
+                                                <div class="col-12 d-flex justify-content-between border-bottom pb-1 mb-1 border-light">
+                                                    <span class="text-muted x-small fw-bold" data-i18n="bank_label">Bank</span>
+                                                    <span contenteditable="true" class="editable-field fw-medium text-dark small text-end" id="bank_name" data-placeholder="..."></span>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-between border-bottom pb-1 mb-1 border-light">
+                                                    <span class="text-muted x-small fw-bold" data-i18n="branch_label">Branch</span>
+                                                    <span contenteditable="true" class="editable-field fw-medium text-dark small text-end" id="branch_name" data-placeholder="..."></span>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-between border-bottom pb-1 mb-1 border-light">
+                                                    <span class="text-muted x-small fw-bold" data-i18n="account_type_label">Type</span>
+                                                    <span contenteditable="true" class="editable-field fw-medium text-dark small text-end" id="account_type" data-placeholder="..."></span>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-between border-bottom pb-1 mb-1 border-light">
+                                                    <span class="text-muted x-small fw-bold" data-i18n="account_number_label">Account #</span>
+                                                    <span contenteditable="true" class="editable-field fw-medium text-dark small text-end" id="account_number" data-placeholder="..."></span>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-between">
+                                                    <span class="text-muted x-small fw-bold" data-i18n="account_holder_label">Holder</span>
+                                                    <span contenteditable="true" class="editable-field fw-medium text-dark small text-end" id="account_holder" data-placeholder="..."></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="h-100">
+                                            <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="notes_title">Notes</h6>
+                                            <div contenteditable="true" class="editable-field d-block text-muted small fst-italic" id="invoice_notes" data-placeholder="..." style="min-height: 100px; border: 1px dashed #eee; padding: 8px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Buttons and Footer -->
+                <div class="col-lg-9 mb-5">
+                    <div class="d-flex gap-3 justify-content-end align-items-center bg-white p-3 rounded-pill shadow-sm border">
+                        <div class="input-group input-group-sm border rounded-pill overflow-hidden" style="max-width: 300px;">
+                            <input type="text" class="form-control border-0 px-3 bg-light" id="share_link" readonly placeholder="...">
+                            <button class="btn btn-dark px-3" id="btn_copy_link" onclick="invoiceApp.copyShareLink();">
+                                <i class="bi bi-link-45deg"></i> <span data-i18n="btn_copy_link">Copy</span>
+                            </button>
+                        </div>
+                        <div class="vr mx-2"></div>
+                        <button class="btn btn-primary rounded-pill px-4" onclick="invoiceApp.downloadPDF();">
+                            <i class="bi bi-download me-2"></i> <span data-i18n="btn_download_pdf">PDF</span>
+                        </button>
+                    </div>
+                    <footer class="text-center text-muted mt-5 pb-4 x-small">
+                        <p data-i18n="footer_privacy">Data remains local. Auto-saved in your browser.</p>
+                        <div class="opacity-75">
+                            2025 &copy; Tetsuaki Baba
+                            <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i class="bi bi-github"></i></a>
+                        </div>
+                    </footer>
+                </div>
             </div>
         </div>
-
-
-        <hr>
-        <footer class="text-center">
-            <p class="small">
-                The data entered will not be sent outside the system. Please refer to the source code for details.
-                The author assumes no responsibility for any damage or loss caused by this system.
-            </p>
-            2025 &copy; Tetsuaki Baba <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i
-                    class="bi bi-github"></i></a>
-        </footer>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./index.js"></script>
-</body>
+        <!-- JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="./index.js"></script>
+    </body>
 
 </html>

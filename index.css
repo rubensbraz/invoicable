@@ -1,64 +1,366 @@
-html {
-    font-size: 14px;
+/* ==========================================================================
+   INVOICABLE - MAIN STYLESHEET
+   ========================================================================== */
+
+/* TABLE OF CONTENTS:
+   1. Configuration & Variables
+   2. Global Resets & Body
+   3. Typography & Headers
+   4. Toolbar & Navigation
+   5. Form Elements & Inputs (Editable Fields)
+   6. Table & Invoice Items
+   7. PDF & Print Utilities
+   8. Mobile & Responsive Styles (NEW)
+*/
+
+/* ==========================================================================
+   1. CONFIGURATION & VARIABLES
+   ========================================================================== */
+
+:root {
+    /* --- Color Palette --- */
+    --primary-color: #2c3e50;           /* Main theme color */
+    --primary-text-color: #ffffff;      /* Text on top of primary color */
+    
+    /* --- Backgrounds --- */
+    --bg-body: #f3f4f6;                 /* Main page background */
+    --bg-paper: #ffffff;                /* Invoice paper background */
+    --bg-toolbar: #f8f9fa;              /* Toolbar background */
+    --bg-toolbar-hover: #ffffff;        /* Toolbar item hover background */
+
+    /* --- Text Colors --- */
+    --text-main: #374151;               /* Standard text color */
+    --text-muted: #6c757d;              /* Muted/Icon color */
+    --text-placeholder: #adb5bd;        /* Placeholder text color */
+    --text-secondary: #4b5563;          /* Secondary text color */
+
+    /* --- Borders & Lines --- */
+    --border-color: #e5e7eb;            /* Standard border */
+    --border-hover: #d1d5db;            /* Border color on hover */
+    --border-focus: #ced4da;            /* Border color on focus */
+
+    /* --- Typography --- */
+    --font-family-sans: 'Inter', sans-serif;
+    --font-family-mono: 'Roboto Mono', monospace;
+    
+    /* --- Spacing & Sizing --- */
+    --border-radius: 6px;               /* Standard border radius */
+    --toolbar-height: 36px;             /* Height of toolbar items */
+    --spacing-xs: 0.5px;                /* Letter spacing */
 }
 
-#pdf_element {
-    font-family: 'Roboto Mono', monospace;
+/* ==========================================================================
+   2. GLOBAL RESETS & BODY
+   ========================================================================== */
+
+body {
+    background-color: var(--bg-body);
+    font-family: var(--font-family-sans);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased; /* Smooth fonts on MacOS */
 }
 
+/* Utility to prevent text selection (useful for UI elements) */
 .unselectable {
-    -moz-user-select: -moz-none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-
-    /*
-      Introduced in IE 10.
-      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-    */
-    -ms-user-select: none;
     user-select: none;
 }
 
-.editable-field {
+/* ==========================================================================
+   3. TYPOGRAPHY & HEADERS
+   ========================================================================== */
+
+.header-title {
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+/* Decorative banner line */
+.header-banner {
+    background-color: var(--primary-color) !important;
+}
+
+/* Helper for primary colored text */
+.text-primary-custom {
+    color: var(--primary-color);
+}
+
+/* Extra small text utility */
+.x-small {
+    font-size: 0.7rem;
+    letter-spacing: var(--spacing-xs);
+}
+
+/* Monospace font application for numbers and data */
+#pdf_element .item-price,
+#pdf_element .item-quantity,
+#pdf_element .item-amount,
+#invoice_total,
+#invoice_number,
+#date {
+    font-family: var(--font-family-mono);
+    letter-spacing: -0.5px;
+}
+
+/* Date Picker Styling */
+.date-picker-input {
     border: none;
-    border-bottom: 1px dashed #ccc;
-    padding: 2px 4px;
-    min-height: 20px;
-    min-width: 100px;
-    display: inline-block;
-    outline: none;
+    border-bottom: 1px dashed transparent;
     background: transparent;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    color: #212529;
+    padding: 0;
+    width: auto;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: inherit;
+    text-align: right;
+}
+
+.date-picker-input:hover {
+    border-bottom-color: #ced4da;
+    background-color: rgba(0,0,0,0.01);
+}
+
+.date-picker-input:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--primary-color);
+    background-color: rgba(var(--primary-color), 0.05);
+}
+
+/* ==========================================================================
+   4. TOOLBAR & NAVIGATION
+   ========================================================================== */
+
+.navbar-spacer {
+    height: 80px;
+    transition: height 0.3s ease;
+}
+
+/* Container for toolbar buttons/selects */
+.toolbar-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-toolbar);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0 10px;
+    height: var(--toolbar-height);
+    transition: all 0.2s ease;
+}
+
+.toolbar-item:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-toolbar-hover);
+}
+
+.toolbar-item i {
+    font-size: 1rem;
+    margin-right: 6px;
+    color: var(--text-muted);
+}
+
+/* Styled select inputs inside the toolbar */
+.toolbar-select {
+    border: none;
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none !important;
+    width: auto;
+}
+
+/* Circular Color Picker Wrapper */
+.color-picker-wrapper {
+    width: var(--toolbar-height);
+    height: var(--toolbar-height);
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-picker-wrapper:hover {
+    transform: scale(1.1);
+    border-color: var(--border-hover);
+}
+
+/* Actual color input (hidden visually but accessible) */
+.form-control-color {
+    width: 150%;
+    height: 150%;
+    transform: translate(-25%, -25%);
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   5. FORM ELEMENTS & INPUTS (EDITABLE FIELDS)
+   ========================================================================== */
+
+/* Contenteditable fields styling */
+.editable-field {
+    border-bottom: 1px dashed transparent; /* Start transparent, show on hover/focus only if desired */
+    padding: 1px 0;
+    min-width: 30px;
+    outline: none;
+    transition: all 0.2s;
+    cursor: text;
+    line-height: 1.4;
+}
+
+/* Only show dashed border on empty or interaction if preferred.
+   Currently set to transparent default based on previous feedback
+   for cleaner look, but logic maintained here. */
+.editable-field:hover {
+    border-bottom-color: var(--border-focus);
+    background-color: rgba(0, 0, 0, 0.01);
 }
 
 .editable-field:focus {
-    border-bottom: 1px solid #007bff;
-    background: #f8f9fa;
+    border-bottom: 1px solid var(--primary-color);
+    /* Note: Using opacity for focus background based on primary color */
+    background-color: rgba(var(--primary-color), 0.05); /* Requires RGB var or falls back if Hex */
 }
 
+/* Placeholder behavior for empty editable fields */
 .editable-field:empty:before {
-    content: attr(placeholder);
-    color: #999;
+    content: attr(data-placeholder);
+    color: var(--text-placeholder);
     font-style: italic;
+    font-weight: 400;
 }
 
-.invoice-item input {
-    border: none;
-    border-bottom: 1px solid #dee2e6;
-    border-radius: 0;
-    background: transparent;
-    text-align: center;
+/* Prevents wrapping on specific fields until focused */
+.text-nowrap-custom {
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.invoice-item input:focus {
-    border-bottom: 2px solid #007bff;
-    box-shadow: none;
+.text-nowrap-custom:focus {
+    white-space: normal;
+    overflow: visible;
 }
+
+/* ==========================================================================
+   6. TABLE & INVOICE ITEMS
+   ========================================================================== */
 
 .item-description {
-    text-align: left !important;
+    text-align: left;
 }
 
+/* Force center alignment for numeric columns */
+.item-quantity,
+.item-price,
 .item-amount {
-    text-align: center;
-    font-weight: bold;
+    text-align: center !important;
+}
+
+/* Inputs inside table cells */
+.table input.form-control {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.table input.form-control:focus {
+    background: #f9fafb;
+    box-shadow: inset 0 -1px 0 var(--primary-color);
+}
+
+/* Delete/Action button visibility */
+.action-column button {
+    opacity: 0.1;
+    transition: opacity 0.2s;
+}
+
+tr:hover .action-column button {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   7. PDF & PRINT UTILITIES
+   ========================================================================== */
+
+/* Prevents elements from being split across pages in PDF */
+.break-inside-avoid {
+    page-break-inside: avoid;
+}
+
+/* Ensures the PDF container is always white */
+#pdf_element {
+    background-color: var(--bg-paper) !important;
+}
+
+/* ==========================================================================
+   8. MOBILE & RESPONSIVE STYLES
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .navbar-spacer {
+        height: 150px;
+    }
+
+    .navbar .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+        justify-content: center !important;
+        flex-wrap: wrap;
+        gap: 8px !important;
+    }
+
+    /* Adjust spacing for smaller screens */
+    #pdf_element {
+        padding: 1.5rem !important; /* Reduce padding on mobile */
+    }
+
+    /* Stack columns that were side-by-side */
+    .row.gx-5 {
+        --bs-gutter-x: 0; /* Remove gutter */
+    }
+    
+    .col-6 {
+        width: 100%; /* Make half-width columns full width */
+        margin-bottom: 1rem;
+        text-align: left !important; /* Left align everything on mobile for readability */
+    }
+    
+    /* Ensure text alignment overrides specific desktop classes */
+    .text-end {
+        text-align: left !important;
+    }
+
+    /* Adjust table for small screens - Allow scrolling if needed or shrink text */
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    /* Adjust header title size */
+    .header-title {
+        font-size: 2rem;
+    }
 }
