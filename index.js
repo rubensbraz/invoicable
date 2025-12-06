@@ -713,9 +713,9 @@ const invoiceApp = (function () {
             table.style.width = '100%';
         }
 
-        // Expand Description Column
-        const descHeader = clone.querySelector('th[data-i18n="col_description"]');
-        if (descHeader) descHeader.setAttribute('width', '50%');
+        // Expand Amount Column
+        const descHeader = clone.querySelector('th[data-i18n="col_amount"]');
+        if (descHeader) descHeader.setAttribute('width', '27%');
 
         // Handle Inputs: Convert to Text spans
         clone.querySelectorAll('input').forEach(input => {
