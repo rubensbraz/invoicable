@@ -614,7 +614,7 @@ const invoiceApp = (function () {
                     }
                 }
                 span.innerText = formattedDate;
-                span.style.textAlign = "right"; // Keep alignment
+                span.style.textAlign = "right";
             } else {
                 // Standard text inputs
                 span.innerText = input.value;

@@ -10,7 +10,7 @@
    5. Form Elements & Inputs (Editable Fields)
    6. Table & Invoice Items
    7. PDF & Print Utilities
-   8. Mobile & Responsive Styles (NEW)
+   8. Mobile & Responsive Styles
 */
 
 /* ==========================================================================
@@ -209,7 +209,7 @@ body {
 
 /* Contenteditable fields styling */
 .editable-field {
-    border-bottom: 1px dashed transparent; /* Start transparent, show on hover/focus only if desired */
+    border-bottom: 1px dashed transparent;
     padding: 1px 0;
     min-width: 30px;
     outline: none;
@@ -218,9 +218,6 @@ body {
     line-height: 1.4;
 }
 
-/* Only show dashed border on empty or interaction if preferred.
-   Currently set to transparent default based on previous feedback
-   for cleaner look, but logic maintained here. */
 .editable-field:hover {
     border-bottom-color: var(--border-focus);
     background-color: rgba(0, 0, 0, 0.01);
@@ -228,7 +225,6 @@ body {
 
 .editable-field:focus {
     border-bottom: 1px solid var(--primary-color);
-    /* Note: Using opacity for focus background based on primary color */
     background-color: rgba(var(--primary-color), 0.05); /* Requires RGB var or falls back if Hex */
 }
 
@@ -335,12 +331,12 @@ tr:hover .action-column button {
 
     /* Adjust spacing for smaller screens */
     #pdf_element {
-        padding: 1.5rem !important; /* Reduce padding on mobile */
+        padding: 1.5rem !important;
     }
 
     /* Stack columns that were side-by-side */
     .row.gx-5 {
-        --bs-gutter-x: 0; /* Remove gutter */
+        --bs-gutter-x: 0;
     }
     
     .col-6 {
@@ -354,7 +350,7 @@ tr:hover .action-column button {
         text-align: left !important;
     }
 
-    /* Adjust table for small screens - Allow scrolling if needed or shrink text */
+    /* Adjust table for small screens */
     .table {
         font-size: 0.8rem;
     }
