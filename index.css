@@ -362,4 +362,16 @@ tr:hover .action-column button {
     .header-title {
         font-size: 2rem;
     }
+
+    .footer-actions {
+        flex-direction: column !important;
+        align-items: stretch !important; /* Full width buttons */
+        border-radius: 16px !important;  /* Less rounded on mobile stack */
+        gap: 12px !important;
+        padding: 20px !important;
+    }
+
+    .footer-actions button {
+        width: 100%;
+    }
 }

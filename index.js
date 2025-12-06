@@ -74,6 +74,9 @@ const invoiceApp = (function () {
             btn_copy_link: "Copy Link",
             btn_link_copied: "Copied!",
             btn_download_pdf: "Download PDF",
+            btn_clear: "Clear all inputs",
+            confirm_clear: "Are you sure you want to clear all data? This action cannot be undone.",
+            pdf_recreate_link: "Click here to recreate this Invoice",
             footer_privacy: "Data is saved locally in your browser. The author assumes no responsibility for any damage or loss caused by this system.",
             placeholders: {
                 bill_to_name: "Name",
@@ -116,6 +119,9 @@ const invoiceApp = (function () {
             btn_copy_link: "Copiar Link",
             btn_link_copied: "Copiado!",
             btn_download_pdf: "Baixar PDF",
+            btn_clear: "Limpar tudo",
+            confirm_clear: "Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.",
+            pdf_recreate_link: "Clique aqui para refazer esta Fatura",
             footer_privacy: "Os dados são salvos localmente no seu navegador. O autor não assume qualquer responsabilidade por danos ou perdas causados ​​por este sistema.",
             placeholders: {
                 bill_to_name: "Nome",
@@ -158,6 +164,9 @@ const invoiceApp = (function () {
             btn_copy_link: "リンク作成",
             btn_link_copied: "完了!",
             btn_download_pdf: "PDF保存",
+            btn_clear: "すべて消去",
+            confirm_clear: "すべてのデータを消去してもよろしいですか？この操作は取り消せません。",
+            pdf_recreate_link: "この請求書を再発行するリンク",
             footer_privacy: "データはブラウザ内にローカルに保存されます。このシステムによって生じたいかなる損害または損失についても、作者は一切責任を負いません。",
             placeholders: {
                 bill_to_name: "顧客名",
@@ -623,6 +632,21 @@ const invoiceApp = (function () {
     }
 
     /**
+     * Clears all data from LocalStorage and resets the form by reloading.
+     */
+    function clearData() {
+        const t = translations[state.lang] || translations['en'];
+        
+        // Confirmation message
+        if (confirm(t.confirm_clear)) {
+            localStorage.removeItem('invoiceData');
+            // Clear URL parameters to prevent restoring data upon reload
+            window.history.replaceState({}, '', window.location.pathname);
+            window.location.reload();
+        }
+    }
+
+    /**
      * Copies the current state URL to clipboard.
      */
     function copyShareLink() {
@@ -680,6 +704,13 @@ const invoiceApp = (function () {
         // Clone DOM to clean up for print without affecting UI
         const clone = element.cloneNode(true);
         clone.classList.add('pdf-clean-mode');
+
+        // Inject the current share URL into the footer link in the clone
+        const linkElement = clone.querySelector('#pdf_recreate_link');
+        if (linkElement) {
+            const currentUrl = generateShareUrl();
+            linkElement.href = currentUrl;
+        }
 
         // Cleanup: Remove UI-only elements
         clone.querySelectorAll('.action-column').forEach(el => el.remove());
@@ -786,7 +817,7 @@ const invoiceApp = (function () {
     }
 
     // Public API
-    return { init, addItem, removeItem, calculateRowTotal, copyShareLink, downloadPDF };
+    return { init, addItem, removeItem, calculateRowTotal, clearData, copyShareLink, downloadPDF };
 })();
 
 // Start App

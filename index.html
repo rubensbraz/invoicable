@@ -192,25 +192,30 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mt-5 pt-3 border-top text-center text-muted">
+                                    <a id="pdf_recreate_link" href="#" target="_blank" class="text-decoration-none text-muted small" data-i18n="pdf_recreate_link">
+                                        Click here to recreate Invoice
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Buttons and Footer -->
                 <div class="col-lg-9 mb-5">
-                    <div class="d-flex gap-3 justify-content-end align-items-center bg-white p-3 rounded-pill shadow-sm border">
-                        <div class="input-group input-group-sm border rounded-pill overflow-hidden" style="max-width: 300px;">
-                            <input type="text" class="form-control border-0 px-3 bg-light" id="share_link" readonly placeholder="...">
-                            <button class="btn btn-dark px-3" id="btn_copy_link" onclick="invoiceApp.copyShareLink();">
-                                <i class="bi bi-link-45deg"></i> <span data-i18n="btn_copy_link">Copy</span>
-                            </button>
-                        </div>
-                        <div class="vr mx-2"></div>
+                    <div class="d-flex gap-2 justify-content-center align-items-center bg-white p-3 rounded-pill shadow-sm border footer-actions">
+                        <button class="btn btn-danger rounded-pill px-4" onclick="invoiceApp.clearData();">
+                            <i class="bi bi-trash me-1"></i> <span data-i18n="btn_clear">Clear inputs</span>
+                        </button>
+                        <button class="btn btn-dark rounded-pill px-4" id="btn_copy_link" onclick="invoiceApp.copyShareLink();">
+                            <i class="bi bi-link-45deg me-1"></i> <span data-i18n="btn_copy_link">Copy Link</span>
+                        </button>
                         <button class="btn btn-primary rounded-pill px-4" onclick="invoiceApp.downloadPDF();">
                             <i class="bi bi-download me-2"></i> <span data-i18n="btn_download_pdf">PDF</span>
                         </button>
+                        <input type="text" id="share_link" readonly style="position:absolute; left:-9999px;">
                     </div>
-                    <footer class="text-center text-muted mt-5 pb-4 x-small">
+                    <footer class="text-center text-muted mt-5 pb-4 small">
                         <p data-i18n="footer_privacy">Data remains local. Auto-saved in your browser.</p>
                         <div class="opacity-75"> 2025 &copy; Tetsuaki Baba <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i class="bi bi-github"></i></a>
                         </div>
