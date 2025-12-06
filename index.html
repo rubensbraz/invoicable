@@ -36,6 +36,13 @@
                                 <option value="br">DD/MM/YYYY (BR)</option>
                             </select>
                         </div>
+                        <div class="toolbar-item" title="Time Format">
+                            <i class="bi bi-clock text-muted"></i>
+                            <select id="timeFormatSelect" class="toolbar-select form-select form-select-sm">
+                                <option value="24h">24h</option>
+                                <option value="12h">12h (AM/PM)</option>
+                            </select>
+                        </div>
                         <div class="toolbar-item" title="Currency">
                             <i class="bi bi-cash-coin text-muted"></i>
                             <select id="currencySelect" class="toolbar-select form-select form-select-sm">
@@ -75,30 +82,49 @@
                                             <span class="text-muted small fw-bold text-uppercase" data-i18n="date_label">Date:</span>
                                             <input type="date" id="date" class="form-control date-picker-input" title="Click to change date">
                                         </div>
+                                        <div class="d-flex align-items-center justify-content-end gap-2 mt-1">
+                                            <span class="text-muted small fw-bold text-uppercase" data-i18n="time_label">Time:</span>
+                                            <input type="time" id="time" class="form-control date-picker-input" title="Click to change time">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="header-banner mb-4" style="height: 4px; width: 100%; border-radius: 2px;"></div>
                                 <div class="row mb-4 gx-5">
                                     <div class="col-6">
-                                        <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="from_title">From</h6>
-                                        <div contenteditable="true" class="editable-field fw-bold fs-6 mb-1 text-nowrap-custom" id="bill_from_name" data-placeholder="Your Name / Company">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-2 header-label-lg" data-i18n="from_title">From</h6>
+                                        <div class="d-flex align-items-center gap-2 fw-bold fs-5 mb-1 text-nowrap-custom">
+                                            <i class="small bi bi-person"></i>
+                                            <span contenteditable="true" class="editable-field" id="bill_from_name" data-placeholder="Name / Company"></span>
                                         </div>
-                                        <div contenteditable="true" class="editable-field d-block mb-1 fs-6" id="bill_from_address" data-placeholder="Your Address">
+                                        <div class="d-flex align-items-center gap-2 mb-1 fs-6">
+                                            <i class="small bi bi-geo-alt"></i> <span contenteditable="true" class="editable-field" id="bill_from_address" data-placeholder="Address"></span>
                                         </div>
-                                        <div class="d-flex align-items-center gap-2 text-muted x-small mt-2">
-                                            <i class="bi bi-telephone"></i>
+                                        <div class="contact-line d-flex align-items-center gap-2 text-muted small mt-2 mb-2">
+                                            <i class="small bi bi-telephone"></i>
                                             <span contenteditable="true" class="editable-field" id="bill_from_phone" data-placeholder="Phone"></span>
                                         </div>
-                                        <div class="d-flex align-items-center gap-2 text-muted x-small">
-                                            <i class="bi bi-envelope"></i>
+                                        <div class="contact-line d-flex align-items-center gap-2 text-muted small">
+                                            <i class="small bi bi-envelope"></i>
                                             <span contenteditable="true" class="editable-field" id="bill_from_email" data-placeholder="Email"></span>
                                         </div>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="bill_to_title">Bill To</h6>
-                                        <div contenteditable="true" class="editable-field fw-bold fs-6 mb-1 text-end text-nowrap-custom" id="bill_to_name" data-placeholder="Client Name">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-2 header-label-lg" data-i18n="bill_to_title">Bill To</h6>
+                                        <div class="d-flex align-items-center justify-content-end gap-2 fw-bold fs-5 mb-1 text-nowrap-custom">
+                                            <span contenteditable="true" class="editable-field text-end" id="bill_to_name" data-placeholder="Name / Company"></span>
+                                            <i class="small bi bi-person"></i>
                                         </div>
-                                        <div contenteditable="true" class="editable-field d-block text-end fs-6" id="bill_to_address" data-placeholder="Client Address">
+                                        <div class="d-flex align-items-center justify-content-end gap-2 mb-1 fs-6">
+                                            <span contenteditable="true" class="editable-field text-end" id="bill_to_address" data-placeholder="Address"></span>
+                                            <i class="small bi bi-geo-alt"></i>
+                                        </div>
+                                        <div class="contact-line d-flex align-items-center justify-content-end gap-2 text-muted small mt-2 mb-2">
+                                            <span contenteditable="true" class="editable-field text-end" id="bill_to_phone" data-placeholder="Phone"></span>
+                                            <i class="small bi bi-telephone"></i>
+                                        </div>
+                                        <div class="contact-line d-flex align-items-center justify-content-end gap-2 text-muted small">
+                                            <span contenteditable="true" class="editable-field text-end" id="bill_to_email" data-placeholder="Email"></span>
+                                            <i class="small bi bi-envelope"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -125,8 +151,8 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2" class="border-0"></td>
-                                                <td class="text-end fw-bold fs-6 pt-2 border-0" data-i18n="total_label">Total:</td>
-                                                <td class="text-end fw-bold fs-6 pt-2 border-0 text-primary-custom" id="invoice_total">0.00</td>
+                                                <td class="text-end fw-bold fs-5 pt-2 border-0" data-i18n="total_label">Total:</td>
+                                                <td class="text-end fw-bold fs-5 pt-2 border-0 text-primary-custom" id="invoice_total">0.00</td>
                                                 <td class="border-0"></td>
                                             </tr>
                                         </tfoot>
@@ -135,7 +161,7 @@
                                 <div class="row g-4 mt-1">
                                     <div class="col-7">
                                         <div class="p-3 rounded-2 bg-light bg-opacity-50 border border-light h-100 break-inside-avoid">
-                                            <h6 class="text-uppercase text-muted fw-bold x-small mb-3" data-i18n="payment_info_title">Payment Details</h6>
+                                            <h6 class="text-uppercase text-muted fw-bold mb-3" data-i18n="payment_info_title">Payment Details</h6>
                                             <div class="row g-2">
                                                 <div class="col-12 d-flex justify-content-between border-bottom pb-1 mb-1 border-light">
                                                     <span class="text-muted x-small fw-bold" data-i18n="bank_label">Bank</span>
@@ -162,7 +188,7 @@
                                     </div>
                                     <div class="col-5">
                                         <div class="h-100">
-                                            <h6 class="text-uppercase text-muted fw-bold x-small mb-2" data-i18n="notes_title">Notes</h6>
+                                            <h6 class="text-uppercase text-muted fw-bold mb-2" data-i18n="notes_title">Notes</h6>
                                             <div contenteditable="true" class="editable-field d-block text-muted small fst-italic" id="invoice_notes" data-placeholder="..." style="min-height: 100px; border: 1px dashed #eee; padding: 8px;"></div>
                                         </div>
                                     </div>
@@ -187,9 +213,7 @@
                     </div>
                     <footer class="text-center text-muted mt-5 pb-4 x-small">
                         <p data-i18n="footer_privacy">Data remains local. Auto-saved in your browser.</p>
-                        <div class="opacity-75">
-                            2025 &copy; Tetsuaki Baba
-                            <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i class="bi bi-github"></i></a>
+                        <div class="opacity-75"> 2025 &copy; Tetsuaki Baba <a href="https://github.com/TetsuakiBaba/invoicable" target="_blank"><i class="bi bi-github"></i></a>
                         </div>
                     </footer>
                 </div>

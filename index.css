@@ -74,6 +74,11 @@ body {
     letter-spacing: -0.5px;
 }
 
+.header-label-lg {
+    font-size: 0.9rem !important;
+    letter-spacing: 0.5px;
+}
+
 /* Decorative banner line */
 .header-banner {
     background-color: var(--primary-color) !important;
@@ -116,6 +121,12 @@ body {
     font-size: 1rem;
     line-height: inherit;
     text-align: right;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
 }
 
 .date-picker-input:hover {
@@ -209,7 +220,7 @@ body {
 
 /* Contenteditable fields styling */
 .editable-field {
-    border-bottom: 1px dashed transparent;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.3);
     padding: 1px 0;
     min-width: 30px;
     outline: none;
@@ -225,7 +236,7 @@ body {
 
 .editable-field:focus {
     border-bottom: 1px solid var(--primary-color);
-    background-color: rgba(var(--primary-color), 0.05); /* Requires RGB var or falls back if Hex */
+    background-color: rgba(var(--primary-color), 0.05);
 }
 
 /* Placeholder behavior for empty editable fields */
@@ -301,6 +312,30 @@ tr:hover .action-column button {
     background-color: var(--bg-paper) !important;
 }
 
+.pdf-clean-mode {
+    margin: 0 auto;
+}
+
+.pdf-clean-mode .editable-field {
+    border-bottom: none !important;
+    padding: 0 !important;
+}
+
+.pdf-clean-mode .editable-field:empty::before {
+    content: "" !important; /* Remove placeholders in PDF */
+}
+
+.pdf-clean-mode .col-6 {
+    width: 50% !important;
+    max-width: 50% !important;
+}
+
+.pdf-clean-mode .col-6:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 /* ==========================================================================
    8. MOBILE & RESPONSIVE STYLES
    ========================================================================== */
@@ -308,11 +343,6 @@ tr:hover .action-column button {
 @media (max-width: 768px) {
     .navbar-spacer {
         height: 150px;
-    }
-
-    .navbar .container {
-        padding-left: 10px;
-        padding-right: 10px;
     }
     
     .navbar-brand {
@@ -328,34 +358,7 @@ tr:hover .action-column button {
         flex-wrap: wrap;
         gap: 8px !important;
     }
-
-    /* Adjust spacing for smaller screens */
-    #pdf_element {
-        padding: 1.5rem !important;
-    }
-
-    /* Stack columns that were side-by-side */
-    .row.gx-5 {
-        --bs-gutter-x: 0;
-    }
     
-    .col-6 {
-        width: 100%; /* Make half-width columns full width */
-        margin-bottom: 1rem;
-        text-align: left !important; /* Left align everything on mobile for readability */
-    }
-    
-    /* Ensure text alignment overrides specific desktop classes */
-    .text-end {
-        text-align: left !important;
-    }
-
-    /* Adjust table for small screens */
-    .table {
-        font-size: 0.8rem;
-    }
-    
-    /* Adjust header title size */
     .header-title {
         font-size: 2rem;
     }
