@@ -1,7 +1,7 @@
 /**
  * Invoicable - Simple Invoice Generator
- * * @version 2.0.0
- * @author Tetsuaki Baba // Refactored by Rubens Braz
+ * * @version 2.2.0
+ * @author Tetsuaki Baba and Rubens Braz
  */
 
 const invoiceApp = (function () {
@@ -198,10 +198,14 @@ const invoiceApp = (function () {
     function init() {
         populateCurrencySelect();
         setupEventListeners();
-        loadFromLocal(); // Persistence check
-
-        // Handle URL parameters (overrides local storage if present)
-        handleUrlParameters();
+        
+        // PRIORITY: Handle URL parameters first
+        // If data is found in URL, we use it and SKIP LocalStorage to ensure the link is the source of truth
+        const loadedFromUrl = handleUrlParameters();
+        // FALLBACK: Only load from LocalStorage if no URL data was present
+        if (!loadedFromUrl) {
+            loadFromLocal();
+        }
 
         // Sync UI Elements with State
         document.getElementById('languageSelect').value = state.lang;
@@ -632,17 +636,39 @@ const invoiceApp = (function () {
     }
 
     /**
-     * Clears all data from LocalStorage and resets the form by reloading.
+     * Clears content fields but keeps configuration (Lang, Currency, etc).
      */
     function clearData() {
         const t = translations[state.lang] || translations['en'];
         
-        // Confirmation message
         if (confirm(t.confirm_clear)) {
-            localStorage.removeItem('invoiceData');
-            // Clear URL parameters to prevent restoring data upon reload
+            // 1. Clear all editable text fields (except Invoice Number, which we regen)
+            document.querySelectorAll('.editable-field').forEach(el => {
+                if (el.id !== 'invoice_number') {
+                    el.innerText = '';
+                }
+            });
+
+            // 2. Reset Invoice Number
+            document.getElementById('invoice_number').innerText = generateInvoiceNumber();
+
+            // 3. Reset Dates to Today/Now
+            document.getElementById('date').value = '';
+            document.getElementById('time').value = '';
+            updateDateDisplay();
+            updateTimeDisplay();
+
+            // 4. Reset Table Items
+            const tbody = document.getElementById('invoice_items');
+            tbody.innerHTML = '';
+            addItem(); // Add one empty row
+
+            // 5. Clear URL parameters
             window.history.replaceState({}, '', window.location.pathname);
-            window.location.reload();
+
+            // 6. Force Save to overwrite LocalStorage with the clean state
+            // Note: This preserves 'state' (lang, currency, etc) because saveToLocal reads from the UI Selects which we didn't touch
+            saveToLocal();
         }
     }
 
@@ -673,10 +699,13 @@ const invoiceApp = (function () {
 
     /**
      * Parses URL parameters on load.
+     * @returns {boolean} True if data was loaded from URL, False otherwise.
      */
     function handleUrlParameters() {
         const params = new URLSearchParams(window.location.search);
-        if (!params.has('invoice_number')) return;
+        
+        // We consider it "loaded from URL" if there is at least an invoice number or items
+        if (!params.has('invoice_number') && !params.has('items')) return false;
 
         const data = {};
         for (const [key, value] of params.entries()) {
@@ -692,6 +721,7 @@ const invoiceApp = (function () {
         }
 
         restoreData(data);
+        return true;
     }
 
     /**
