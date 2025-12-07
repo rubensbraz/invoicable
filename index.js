@@ -742,8 +742,8 @@ const invoiceApp = (function () {
         // Generate High Quality QRCode
         new QRCode(container, {
             text: currentUrl,
-            width: 800,
-            height: 800,
+            width: 2000,
+            height: 2000,
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H // High error correction
