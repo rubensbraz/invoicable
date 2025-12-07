@@ -375,3 +375,19 @@ tr:hover .action-column button {
         width: 100%;
     }
 }
+
+/* ==========================================================================
+   9. QR CODE STYLES
+   ========================================================================== */
+
+#qr_code_container {
+    opacity: 0.9;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#qr_code_container img, 
+#qr_code_container canvas {
+    max-width: 120px !important;
+    height: auto !important;
+}

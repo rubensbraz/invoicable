@@ -76,7 +76,7 @@ const invoiceApp = (function () {
             btn_download_pdf: "Download PDF",
             btn_clear: "Clear all inputs",
             confirm_clear: "Are you sure you want to clear all data? This action cannot be undone.",
-            pdf_recreate_link: "Click here to recreate this Invoice",
+            pdf_recreate_link: "Click here to recreate this invoice or scan the QR code below.",
             footer_privacy: "Data is saved locally in your browser. The author assumes no responsibility for any damage or loss caused by this system.",
             placeholders: {
                 bill_to_name: "Name",
@@ -121,7 +121,7 @@ const invoiceApp = (function () {
             btn_download_pdf: "Baixar PDF",
             btn_clear: "Limpar tudo",
             confirm_clear: "Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.",
-            pdf_recreate_link: "Clique aqui para refazer esta Fatura",
+            pdf_recreate_link: "Clique aqui para recriar essa fatura ou escaneie o QR Code abaixo.",
             footer_privacy: "Os dados são salvos localmente no seu navegador. O autor não assume qualquer responsabilidade por danos ou perdas causados ​​por este sistema.",
             placeholders: {
                 bill_to_name: "Nome",
@@ -166,7 +166,7 @@ const invoiceApp = (function () {
             btn_download_pdf: "PDF保存",
             btn_clear: "すべて消去",
             confirm_clear: "すべてのデータを消去してもよろしいですか？この操作は取り消せません。",
-            pdf_recreate_link: "この請求書を再発行するリンク",
+            pdf_recreate_link: "この請求書を再作成するにはここをクリックするか、下の QR コードをスキャンしてください。",
             footer_privacy: "データはブラウザ内にローカルに保存されます。このシステムによって生じたいかなる損害または損失についても、作者は一切責任を負いません。",
             placeholders: {
                 bill_to_name: "顧客名",
@@ -224,10 +224,14 @@ const invoiceApp = (function () {
             invNumField.innerText = generateInvoiceNumber();
         }
 
+        // Generates first QRCode
+        updateLiveQRCode();
+
         // Start Auto-save loop (every 5 seconds)
         setInterval(() => {
             saveToLocal();
             updateLiveUrl();
+            updateLiveQRCode();
         }, 5000);
     }
 
@@ -725,6 +729,28 @@ const invoiceApp = (function () {
     }
 
     /**
+     * Updates the QR Code visible on the screen (UI).
+     */
+    function updateLiveQRCode() {
+        const container = document.getElementById('qr_code_container');
+        if (!container) return;
+
+        container.innerHTML = ''; // Clear previous code
+
+        const currentUrl = generateShareUrl();
+        
+        // Generate High Quality QRCode
+        new QRCode(container, {
+            text: currentUrl,
+            width: 800,
+            height: 800,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H // High error correction
+        });
+    }
+
+    /**
      * Generates and downloads the PDF using html2pdf.js.
      */
     function downloadPDF() {
@@ -735,11 +761,23 @@ const invoiceApp = (function () {
         const clone = element.cloneNode(true);
         clone.classList.add('pdf-clean-mode');
 
-        // Inject the current share URL into the footer link in the clone
+        // Inject the current share URL into the footer link
+        const currentUrl = generateShareUrl();
         const linkElement = clone.querySelector('#pdf_recreate_link');
-        if (linkElement) {
-            const currentUrl = generateShareUrl();
-            linkElement.href = currentUrl;
+        if (linkElement) linkElement.href = currentUrl;
+
+        // Generate QR Code
+        const qrContainer = clone.querySelector('#qr_code_container');
+        if (qrContainer) {
+            qrContainer.innerHTML = ''; 
+            new QRCode(qrContainer, {
+                text: currentUrl,
+                width: 400,   // High resolution
+                height: 400,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
         }
 
         // Cleanup: Remove UI-only elements
@@ -763,16 +801,14 @@ const invoiceApp = (function () {
             }
         });
 
-        // Remove the contenteditable attribute from the clone to avoid cursor/focus issues
+        // Remove contenteditable to fix cursor issues
         clone.querySelectorAll('[contenteditable]').forEach(el => {
             el.removeAttribute('contenteditable');
         });
 
         // Ensure table takes full width
         const table = clone.querySelector('table');
-        if (table) {
-            table.style.width = '100%';
-        }
+        if (table) table.style.width = '100%';
 
         // Expand Amount Column
         const descHeader = clone.querySelector('th[data-i18n="col_amount"]');
@@ -830,11 +866,14 @@ const invoiceApp = (function () {
             if (input.parentNode) input.parentNode.replaceChild(span, input);
         });
 
-        // 7. Styling Overrides for PDF
+        // Styling Overrides for PDF
         clone.style.backgroundColor = "#ffffff";
         clone.style.padding = "20px";
 
-        // 8. Configuration
+        // Append clone to body so html2canvas can parse computed styles
+        document.body.appendChild(clone);
+
+        // Configuration
         const opt = {
             margin: [5, 5, 5, 5],
             filename: `invoice_${invoiceNum}.pdf`,
@@ -843,7 +882,20 @@ const invoiceApp = (function () {
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(clone).save();
+        html2pdf()
+            .set(opt)
+            .from(clone)
+            .save()
+            .then(() => {
+                document.body.removeChild(clone);
+            })
+            .catch((err) => {
+                console.error('PDF Generation Error:', err);
+                // Ensure cleanup happens even on error
+                if (document.body.contains(clone)) {
+                    document.body.removeChild(clone);
+                }
+            });
     }
 
     // Public API
