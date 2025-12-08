@@ -198,7 +198,7 @@ const invoiceApp = (function () {
     function init() {
         populateCurrencySelect();
         setupEventListeners();
-        
+
         // PRIORITY: Handle URL parameters first
         // If data is found in URL, we use it and SKIP LocalStorage to ensure the link is the source of truth
         const loadedFromUrl = handleUrlParameters();
@@ -276,6 +276,12 @@ const invoiceApp = (function () {
                 const text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 document.execCommand('insertText', false, text);
             });
+
+            el.addEventListener('blur', (e) => {
+                if (e.target.innerText.trim() === '') {
+                    e.target.innerHTML = '';
+                }
+            });
         });
     }
 
@@ -334,9 +340,7 @@ const invoiceApp = (function () {
      * @param {string} langCode - The language code (en, pt, jp).
      */
     function changeLanguage(langCode) {
-        state.lang = langCode;
-        if (!translations[langCode]) return;
-
+        state.lang = translations[langCode] ? langCode : 'en';
         const t = translations[langCode];
 
         // Update static text elements
@@ -455,6 +459,13 @@ const invoiceApp = (function () {
     }
 
     /**
+     * Helper to safely round to 2 decimal places to avoid floating point errors.
+     */
+    function safeRound(num) {
+        return Math.round((num + Number.EPSILON) * 100) / 100;
+    }
+
+    /**
      * Calculates the total for a single row.
      * @param {HTMLElement} input - Any input element within the row.
      */
@@ -462,7 +473,7 @@ const invoiceApp = (function () {
         const row = input.closest('tr');
         const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
-        const amount = quantity * price;
+        const amount = safeRound(quantity * price);
         const symbol = getSymbol();
 
         row.querySelector('.item-amount').textContent = `${symbol} ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -478,8 +489,10 @@ const invoiceApp = (function () {
         items.forEach(item => {
             const quantity = parseFloat(item.querySelector('.item-quantity').value) || 0;
             const price = parseFloat(item.querySelector('.item-price').value) || 0;
-            total += quantity * price;
+            total += safeRound(quantity * price);
         });
+        total = safeRound(total);
+
         const symbol = getSymbol();
         document.getElementById('invoice_total').textContent = `${symbol} ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
@@ -641,7 +654,7 @@ const invoiceApp = (function () {
      */
     function clearData() {
         const t = translations[state.lang] || translations['en'];
-        
+
         if (confirm(t.confirm_clear)) {
             // 1. Clear all editable text fields (except Invoice Number, which we regen)
             document.querySelectorAll('.editable-field').forEach(el => {
@@ -704,9 +717,11 @@ const invoiceApp = (function () {
      */
     function handleUrlParameters() {
         const params = new URLSearchParams(window.location.search);
-        
-        // We consider it "loaded from URL" if there is at least an invoice number or items
-        if (!params.has('invoice_number') && !params.has('items')) return false;
+
+        // We consider it "loaded from URL" if there is at least 1 item below
+        const keysToCheck = ['items', 'invoice_number', 'bill_to_name', 'bill_from_name', 'invoice_notes'];
+        const hasData = keysToCheck.some(key => params.has(key));
+        if (!hasData) return false;
 
         const data = {};
         for (const [key, value] of params.entries()) {
@@ -748,7 +763,7 @@ const invoiceApp = (function () {
         // Force Notes Wrapping
         const notesField = clone.querySelector('#invoice_notes');
         if (notesField) {
-            notesField.style.whiteSpace = "pre-wrap"; 
+            notesField.style.whiteSpace = "pre-wrap";
             notesField.style.wordBreak = "break-word";
             notesField.style.overflowWrap = "break-word";
             notesField.style.width = "100%";
@@ -798,10 +813,21 @@ const invoiceApp = (function () {
             span.style.border = "none";
             span.style.padding = "0";
             span.style.backgroundColor = "transparent";
-            span.style.whiteSpace = "pre-wrap"; 
+            span.style.whiteSpace = "pre-wrap";
             span.style.wordBreak = "break-word";
             span.style.overflowWrap = "break-word";
             span.classList.remove('form-control');
+
+            // Alignment & Display Logic
+            if (input.classList.contains('text-end')) {
+                span.style.textAlign = 'right';
+                span.style.display = 'block';
+            } else if (input.classList.contains('text-center')) {
+                span.style.textAlign = 'center';
+            } else {
+                span.style.textAlign = 'left';
+                span.style.display = 'block';
+            }
 
             // Date Formatting
             if (input.type === 'date') {
