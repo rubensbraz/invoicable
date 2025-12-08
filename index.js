@@ -797,6 +797,9 @@ const invoiceApp = (function () {
             span.style.border = "none";
             span.style.padding = "0";
             span.style.backgroundColor = "transparent";
+            span.style.whiteSpace = "pre-wrap"; 
+            span.style.wordBreak = "break-word";
+            span.style.overflowWrap = "break-word";
             span.classList.remove('form-control');
 
             // Date Formatting
