@@ -304,7 +304,9 @@ tr:hover .action-column button {
 
 /* Prevents elements from being split across pages in PDF */
 .break-inside-avoid {
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block;
 }
 
 /* Ensures the PDF container is always white */
