@@ -217,6 +217,7 @@ const invoiceApp = (function () {
         changeLanguage(state.lang);
         updateDateDisplay();
         updateTimeDisplay();
+        updateCurrencySymbols();
 
         // Ensure Invoice Number exists
         const invNumField = document.querySelector('#invoice_number');
