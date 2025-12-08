@@ -519,6 +519,8 @@ const invoiceApp = (function () {
      */
     function saveToLocal() {
         const data = collectInvoiceData();
+        // Do not save invoice_number to local storage to ensure a new random number on reload
+        delete data.invoice_number;
         localStorage.setItem('invoiceData', JSON.stringify(data));
     }
 
@@ -546,8 +548,8 @@ const invoiceApp = (function () {
      */
     function generateShareUrl() {
         const data = collectInvoiceData();
-        // Remove items_array for cleaner URL
-        const { items_array, ...urlData } = data;
+        // Remove items_array and invoice_number from URL
+        const { items_array, invoice_number, ...urlData } = data;
 
         // Convert to URL params
         const params = new URLSearchParams();
@@ -722,7 +724,7 @@ const invoiceApp = (function () {
         const params = new URLSearchParams(window.location.search);
 
         // We consider it "loaded from URL" if there is at least 1 item below
-        const keysToCheck = ['items', 'invoice_number', 'bill_to_name', 'bill_from_name', 'invoice_notes'];
+        const keysToCheck = ['items', 'bill_to_name', 'bill_from_name', 'invoice_notes'];
         const hasData = keysToCheck.some(key => params.has(key));
         if (!hasData) return false;
 

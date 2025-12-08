@@ -20,6 +20,8 @@
 
 **Invoicable** is a lightweight, browser-based tool designed to create beautiful, professional invoices in seconds. No sign-ups, no backend servers, and no data tracking. Everything happens locally in your browser.
 
+> 💡 **Tip:** Need to create **Receipts**? Check out our sibling project [Receiptable](https://github.com/TetsuakiBaba/receiptable).
+
 ![Invoicable Screenshot](./example.png)
 
 ## ✨ Key Features
