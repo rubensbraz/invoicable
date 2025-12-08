@@ -744,6 +744,16 @@ const invoiceApp = (function () {
         clone.querySelectorAll('.action-column').forEach(el => el.remove());
         clone.querySelectorAll('.no-print').forEach(el => el.remove());
 
+        // Force Notes Wrapping
+        const notesField = clone.querySelector('#invoice_notes');
+        if (notesField) {
+            notesField.style.whiteSpace = "pre-wrap"; 
+            notesField.style.wordBreak = "break-word";
+            notesField.style.overflowWrap = "break-word";
+            notesField.style.width = "100%";
+            notesField.style.display = "block";
+        }
+
         // Cleanup: Remove empty Contact Lines (Phone/Email)
         clone.querySelectorAll('.contact-line').forEach(line => {
             const field = line.querySelector('.editable-field');
