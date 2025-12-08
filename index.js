@@ -428,13 +428,13 @@ const invoiceApp = (function () {
 
         newRow.innerHTML = `
             <td class="ps-2">
-                <input type="text" class="form-control item-description" value="${desc}" placeholder="${t.placeholders.item_desc}" oninput="invoiceApp.calculateRowTotal(this)">
+                <input type="text" class="form-control item-description" placeholder="${t.placeholders.item_desc}" oninput="invoiceApp.calculateRowTotal(this)">
             </td>
             <td class="text-center">
-                <input type="number" class="form-control item-quantity" value="${qty}" min="0" oninput="invoiceApp.calculateRowTotal(this)">
+                <input type="number" class="form-control item-quantity" min="0" oninput="invoiceApp.calculateRowTotal(this)">
             </td>
             <td class="text-center">
-                <input type="number" class="form-control item-price" value="${price}" placeholder="0" step="0.01" min="0" oninput="invoiceApp.calculateRowTotal(this)">
+                <input type="number" class="form-control item-price" placeholder="0" step="0.01" min="0" oninput="invoiceApp.calculateRowTotal(this)">
             </td>
             <td class="item-amount text-center">0</td>
             <td class="action-column text-center">
@@ -444,6 +444,9 @@ const invoiceApp = (function () {
             </td>
         `;
         tbody.appendChild(newRow);
+        newRow.querySelector('.item-description').value = desc;
+        newRow.querySelector('.item-quantity').value = qty;
+        newRow.querySelector('.item-price').value = price;
         calculateRowTotal(newRow.querySelector('.item-description'));
     }
 
