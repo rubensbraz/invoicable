@@ -745,7 +745,6 @@ const invoiceApp = (function () {
      */
     function downloadPDF() {
         const element = document.getElementById('pdf_element');
-        const invoiceNum = document.getElementById('invoice_number').innerText || 'invoice';
 
         // Clone DOM to clean up for print without affecting UI
         const clone = element.cloneNode(true);
@@ -874,9 +873,12 @@ const invoiceApp = (function () {
         document.body.appendChild(clone);
 
         // Configuration
+        const invoiceNum = document.getElementById('invoice_number').innerText || 'invoice';
+        const billTo = document.getElementById('bill_to_name').innerText.trim() || 'person';
+        const invoiceTotal = document.getElementById('invoice_total').innerText.trim() || 'description';
         const opt = {
             margin: [5, 5, 5, 5],
-            filename: `invoice_${invoiceNum}.pdf`,
+            filename: `invoice_${invoiceNum}_${billTo}_${invoiceTotal}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
