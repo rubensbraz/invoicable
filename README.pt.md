@@ -41,7 +41,7 @@ Você pode usar o Invoicable diretamente na web ou rodar localmente.
 
 1.  Clone este repositório:
     ```bash
-    git clone [https://github.com/seu-usuario/invoicable.git](https://github.com/seu-usuario/invoicable.git)
+    git clone [https://github.com/TetsuakiBaba/invoicable.git](https://github.com/TetsuakiBaba/invoicable.git)
     ```
 2.  Navegue até a pasta:
     ```bash
@@ -73,5 +73,7 @@ Distribuído sob a licença MIT. Veja o arquivo `LICENSE` para mais informaçõe
 
 ---
 <div align="center">
-  <small>2025 &copy; Tetsuaki Baba.</small>
+  <p>2025 &copy; Invoicable.</p>
+  <small>Original Project by <a href="https://github.com/TetsuakiBaba">Tetsuaki Baba</a>.</small><br>
+  <small>Refactored by <a href="https://github.com/rubensbraz">Rubens Braz</a>.</small>
 </div>

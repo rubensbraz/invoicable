@@ -41,7 +41,7 @@ Invoicableはウェブ上で直接使用するか、ローカル環境で実行�
 
 1.  リポジトリをクローンします:
     ```bash
-    git clone [https://github.com/yourusername/invoicable.git](https://github.com/yourusername/invoicable.git)
+    git clone [https://github.com/TetsuakiBaba/invoicable.git](https://github.com/TetsuakiBaba/invoicable.git)
     ```
 2.  フォルダに移動します:
     ```bash
@@ -73,5 +73,7 @@ MITライセンスの下で配布されています。詳細は `LICENSE` ファ
 
 ---
 <div align="center">
-  <small>2025 &copy; Tetsuaki Baba.</small>
+  <p>2025 &copy; Invoicable.</p>
+  <small>Original Project by <a href="https://github.com/TetsuakiBaba">Tetsuaki Baba</a>.</small><br>
+  <small>Refactored by <a href="https://github.com/rubensbraz">Rubens Braz</a>.</small>
 </div>
